@@ -1,5 +1,7 @@
-import './transaction.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+
+import './transaction.dart';
 
 void main() => runApp(MyApp());
 
@@ -32,7 +34,7 @@ class MyHomePage extends StatelessWidget {
         title: Text('Flutter App'),
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        //mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Container(
@@ -46,6 +48,30 @@ class MyHomePage extends StatelessWidget {
               elevation: 5,
             ),
           ),
+
+          Card(
+            elevation: 5,
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  TextField(
+                    decoration: InputDecoration(labelText: 'Title'),
+                  ),
+                  TextField(
+                    decoration: InputDecoration(labelText: 'Amount'),
+                  ),
+                  FlatButton(
+                    onPressed: () {},
+                    child: Text('Add Transaction'),
+                    textColor: Colors.purple,
+                  ),
+                ],
+              ),
+            ),
+          ),
+
           // here we need a widget that can hold multiple widgets
           // Transaction itself is not a widget, each transaction in our list
           // should be maooed into a widget that outputs the data of that transaction
@@ -67,7 +93,7 @@ class MyHomePage extends StatelessWidget {
                       ),
                       padding: EdgeInsets.all(10),
                       child: Text(
-                        tx.amount.toString(),
+                        '\$${tx.amount}',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
@@ -86,7 +112,8 @@ class MyHomePage extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          tx.date.toString(),
+                          //DateFormat.yMMMd().format(tx.date),
+                          DateFormat().format(tx.date),
                           style: TextStyle(
                             color: Colors.grey,
                           ),
