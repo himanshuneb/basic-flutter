@@ -46,10 +46,28 @@ class MyHomePage extends StatelessWidget {
               elevation: 5,
             ),
           ),
-          Card(
-            color: Colors.red,
-            child: Text('List of Transactions'),
-          ),
+          // here we need a widget that can hold multiple widgets
+          // Transaction itself is not a widget, each transaction in our list
+          // should be maooed into a widget that outputs the data of that transaction
+          Column(
+            children: transactions.map((tx) {
+              return Card(
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      child: Text(tx.amount.toString()),
+                    ),
+                    Column(
+                      children: <Widget>[
+                        Text(tx.title),
+                        Text(tx.date.toString()),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
+          )
         ],
       ),
     );
