@@ -11,7 +11,25 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter App',
+      title: 'Expense Manager',
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+        accentColor: Colors.amber,
+        fontFamily: 'Quicksand',
+        textTheme: ThemeData.light().textTheme.copyWith(
+                headline6: TextStyle(
+              fontFamily: 'OpenSans',
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            )),
+        appBarTheme: (AppBarTheme(
+            textTheme: ThemeData.light().textTheme.copyWith(
+                    headline6: TextStyle(
+                  fontFamily: 'OpenSans',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                )))),
+      ),
       home: MyHomePage(),
     );
   }
@@ -25,13 +43,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   //transactions are a combination of title and the value spent
   final List<Transaction> _userTransactions = [
-    Transaction(
-        id: 't1', title: 'New Shoes', amount: 69.99, date: DateTime.now()),
-    Transaction(
-        id: 't2',
-        title: 'Weekly groceries',
-        amount: 16.53,
-        date: DateTime.now()),
+    // Transaction(
+    //     id: 't1', title: 'New Shoes', amount: 69.99, date: DateTime.now()),
+    // Transaction(
+    //     id: 't2',
+    //     title: 'Weekly groceries',
+    //     amount: 16.53,
+    //     date: DateTime.now()),
   ];
 
   void _addNewTransaction(String txTitle, double txAmount) {
@@ -63,7 +81,11 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flutter App'),
+        title: Text(
+          'Expense Manager',
+          //style: TextStyle(fontFamily: 'Open Sans'),
+          style: Theme.of(context).appBarTheme.textTheme.headline6,
+        ),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
@@ -82,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
               //have a parent for card (like Container) which has its own clearly
               //defined width
               child: Card(
-                color: Colors.blue,
+                //color: Colors.blue,
                 child: Text('Chart'),
                 elevation: 5,
               ),
