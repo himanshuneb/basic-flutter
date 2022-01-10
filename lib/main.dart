@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import './widgets/new_transaction.dart';
 import './widgets/transaction_list.dart';
+import './widgets/chart.dart';
 import './models/transaction.dart';
 
 void main() => runApp(MyApp());
@@ -52,6 +53,14 @@ class _MyHomePageState extends State<MyHomePage> {
     //     date: DateTime.now()),
   ];
 
+  List<Transaction> get _recentTransactions {
+    return _userTransactions.where((tx) {
+      return tx.date.isAfter(
+        DateTime.now().subtract(Duration(days: 7)),
+      );
+    }).toList();
+  }
+
   void _addNewTransaction(String txTitle, double txAmount) {
     final newTx = Transaction(
       id: DateTime.now().toString(),
@@ -98,17 +107,18 @@ class _MyHomePageState extends State<MyHomePage> {
           //mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-              width: double.infinity,
-              //The card by default depends upon the size of its child unless you
-              //have a parent for card (like Container) which has its own clearly
-              //defined width
-              child: Card(
-                //color: Colors.blue,
-                child: Text('Chart'),
-                elevation: 5,
-              ),
-            ),
+            Chart(_recentTransactions),
+            // Container(
+            //   width: double.infinity,
+            //   //The card by default depends upon the size of its child unless you
+            //   //have a parent for card (like Container) which has its own clearly
+            //   //defined width
+            //   child: Card(
+            //     //color: Colors.blue,
+            //     child: Text('Chart'),
+            //     elevation: 5,
+            //   ),
+            // ),
             TransactionList(_userTransactions),
           ],
         ),
