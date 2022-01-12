@@ -15,7 +15,6 @@ class TransactionList extends StatelessWidget {
     // Transaction itself is not a widget, each transaction in our list
     // should be mapped into a widget that outputs the data of that transaction
     return Container(
-      height: 300,
       child: transactions.isEmpty
           ? Column(children: <Widget>[
               SizedBox(
