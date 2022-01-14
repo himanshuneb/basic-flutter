@@ -16,25 +16,27 @@ class TransactionList extends StatelessWidget {
     // should be mapped into a widget that outputs the data of that transaction
     return Container(
       child: transactions.isEmpty
-          ? Column(children: <Widget>[
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                'No transactions added yet',
-                style: Theme.of(context).textTheme.headline6,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                height: 200,
-                child: Image.asset(
-                  'assets/images/waiting.png',
-                  fit: BoxFit.cover,
+          ? LayoutBuilder(builder: (ctx, constraints) {
+              return Column(children: <Widget>[
+                SizedBox(
+                  height: 10,
                 ),
-              ),
-            ])
+                Text(
+                  'No transactions added yet',
+                  style: Theme.of(context).textTheme.headline6,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  height: constraints.maxHeight * 0.6,
+                  child: Image.asset(
+                    'assets/images/waiting.png',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ]);
+            })
           : ListView.builder(
               itemBuilder: (ctx, index) {
                 // return Card(
