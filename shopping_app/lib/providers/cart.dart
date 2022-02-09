@@ -22,7 +22,20 @@ class Cart with ChangeNotifier {
   }
 
   int get itemCount {
-    return _items.length;
+    // int temp = 0;
+    // int i;
+    // for (i = 0; i < _items.length; i++) {
+    //   temp = temp + _items[i].;
+    // }
+    // return temp;
+
+    var total = 0;
+    _items.forEach((key, cartItem) {
+      total += cartItem.quantity;
+    });
+    return total;
+
+    //return _items.length;
   }
 
   double get totalAmount {
