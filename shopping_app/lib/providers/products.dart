@@ -8,40 +8,44 @@ import './product.dart';
 
 class Products with ChangeNotifier {
   List<Product> _items = [
-    Product(
-      id: 'p1',
-      title: 'Product 1',
-      description: 'Product 1 description',
-      price: 9.99,
-      imageUrl:
-          'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png',
-    ),
-    Product(
-      id: 'p2',
-      title: 'Product 2',
-      description: 'Product 2 description',
-      price: 19.99,
-      imageUrl:
-          'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png',
-    ),
-    Product(
-      id: 'p3',
-      title: 'Product 3',
-      description: 'Product 3 description',
-      price: 29.99,
-      imageUrl:
-          'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png',
-    ),
-    Product(
-      id: 'p4',
-      title: 'Product 4',
-      description: 'Product 4 description',
-      price: 39.99,
-      imageUrl:
-          'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png',
-    ),
+    // Product(
+    //   id: 'p1',
+    //   title: 'Product 1',
+    //   description: 'Product 1 description',
+    //   price: 9.99,
+    //   imageUrl:
+    //       'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png',
+    // ),
+    // Product(
+    //   id: 'p2',
+    //   title: 'Product 2',
+    //   description: 'Product 2 description',
+    //   price: 19.99,
+    //   imageUrl:
+    //       'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png',
+    // ),
+    // Product(
+    //   id: 'p3',
+    //   title: 'Product 3',
+    //   description: 'Product 3 description',
+    //   price: 29.99,
+    //   imageUrl:
+    //       'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png',
+    // ),
+    // Product(
+    //   id: 'p4',
+    //   title: 'Product 4',
+    //   description: 'Product 4 description',
+    //   price: 39.99,
+    //   imageUrl:
+    //       'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png',
+    // ),
   ];
   // var _showFavoritesOnly = false;
+  final String authToken;
+  final String userId;
+
+  Products(this.authToken, this.userId, this._items);
 
   List<Product> get items {
     // if (_showFavoritesOnly) {
@@ -68,8 +72,9 @@ class Products with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  Future<void> fetchAndSetProducts() async {
-    //check
+  Future<void> fetchAndSetProducts([bool filterByUser = false]) async {
+    final filterString =
+        filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
     final url = Uri.parse(
         'https://shopping-app-61e4a-default-rtdb.asia-southeast1.firebasedatabase.app/products.json');
     try {
@@ -78,6 +83,11 @@ class Products with ChangeNotifier {
       if (extractedData == null) {
         return;
       }
+
+      url =
+          'https://flutter-update.firebaseio.com/userFavorites/$userId.json?auth=$authToken';
+      final favoriteResponse = await http.get(url);
+      final favoriteData = json.decode(favoriteResponse.body);
       final List<Product> loadedProducts = [];
       extractedData.forEach((prodId, prodData) {
         loadedProducts.add(Product(
@@ -85,7 +95,8 @@ class Products with ChangeNotifier {
           title: prodData['title'],
           description: prodData['description'],
           price: prodData['price'],
-          isFavorite: prodData['isFavorite'],
+          isFavorite:
+              favoriteData == null ? false : favoriteData[prodId] ?? false,
           imageUrl: prodData['imageUrl'],
         ));
       });
@@ -108,7 +119,7 @@ class Products with ChangeNotifier {
           'description': product.description,
           'imageUrl': product.imageUrl,
           'price': product.price,
-          'isFavorite': product.isFavorite,
+          'creatorId': userId,
         }),
       );
       final newProduct = Product(
@@ -130,7 +141,6 @@ class Products with ChangeNotifier {
   Future<void> updateProduct(String id, Product newProduct) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
-      //check
       final url = Uri.parse(
           'https://shopping-app-61e4a-default-rtdb.asia-southeast1.firebasedatabase.app/products/$id.json');
       await http.patch(url,
@@ -148,7 +158,6 @@ class Products with ChangeNotifier {
   }
 
   Future<void> deleteProduct(String id) async {
-    //check
     final url = Uri.parse(
         'https://shopping-app-61e4a-default-rtdb.asia-southeast1.firebasedatabase.app/products/$id.json');
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
