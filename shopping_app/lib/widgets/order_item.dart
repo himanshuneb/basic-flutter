@@ -48,7 +48,7 @@ class _OrderItemState extends State<OrderItem> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
-                            prod.title!,
+                            prod.title,
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,

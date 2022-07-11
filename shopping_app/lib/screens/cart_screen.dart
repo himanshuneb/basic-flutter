@@ -17,7 +17,6 @@ class CartScreen extends StatelessWidget {
       ),
       body: Column(
         children: <Widget>[
-          //card for total amount and order now
           Card(
             margin: EdgeInsets.all(15),
             child: Padding(
@@ -35,7 +34,7 @@ class CartScreen extends StatelessWidget {
                       '\$${cart.totalAmount.toStringAsFixed(2)}',
                       style: TextStyle(
                         color:
-                            Theme.of(context).primaryTextTheme.headline6!.color,
+                            Theme.of(context).primaryTextTheme.headline6.color,
                       ),
                     ),
                     backgroundColor: Theme.of(context).primaryColor,
@@ -55,7 +54,6 @@ class CartScreen extends StatelessWidget {
               ),
             ),
           ),
-          //gap
           SizedBox(height: 10),
           Expanded(
             child: ListView.builder(

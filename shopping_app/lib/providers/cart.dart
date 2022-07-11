@@ -1,32 +1,25 @@
 import 'package:flutter/foundation.dart';
 
-//structure that will be used in the Cart class
 class CartItem {
   final String id;
-  final String? title;
+  final String title;
   final int quantity;
   final double price;
 
   CartItem({
-    required this.id,
-    required this.title,
-    required this.quantity,
-    required this.price,
+    @required this.id,
+    @required this.title,
+    @required this.quantity,
+    @required this.price,
   });
 }
 
-//with ChangeNotifier to make Cart class a provider
-//there is no widget in this class
 class Cart with ChangeNotifier {
-  //this contains productId, CartItem
-  //the id in CartItem will be having no relation with productId
-  Map<String?, CartItem> _items = {};
+  Map<String, CartItem> _items = {};
 
-  Map<String?, CartItem> get items {
+  Map<String, CartItem> get items {
     return {..._items};
   }
-
-//getter functions
 
   int get itemCount {
     // int temp = 0;
@@ -53,12 +46,10 @@ class Cart with ChangeNotifier {
     return total;
   }
 
-  //modification functions that call notifyListeners at the end
-
   void addItem(
-    String? productId,
+    String productId,
     double price,
-    String? title,
+    String title,
   ) {
     if (_items.containsKey(productId)) {
       // change quantity...
@@ -85,16 +76,16 @@ class Cart with ChangeNotifier {
     notifyListeners();
   }
 
-  void removeItem(String? productId) {
+  void removeItem(String productId) {
     _items.remove(productId);
     notifyListeners();
   }
 
-  void removeSingleItem(String? productId) {
+  void removeSingleItem(String productId) {
     if (!_items.containsKey(productId)) {
       return;
     }
-    if (_items[productId]!.quantity > 1) {
+    if (_items[productId].quantity > 1) {
       _items.update(
           productId,
           (existingCartItem) => CartItem(

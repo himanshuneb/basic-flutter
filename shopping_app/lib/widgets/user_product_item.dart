@@ -5,18 +5,18 @@ import '../screens/edit_product_screen.dart';
 import '../providers/products.dart';
 
 class UserProductItem extends StatelessWidget {
-  final String? id;
-  final String? title;
-  final String? imageUrl;
+  final String id;
+  final String title;
+  final String imageUrl;
 
   UserProductItem(this.id, this.title, this.imageUrl);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(title!),
+      title: Text(title),
       leading: CircleAvatar(
-        backgroundImage: NetworkImage(imageUrl!),
+        backgroundImage: NetworkImage(imageUrl),
       ),
       trailing: Container(
         width: 100,
