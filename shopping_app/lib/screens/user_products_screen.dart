@@ -8,6 +8,11 @@ import './edit_product_screen.dart';
 
 class UserProductsScreen extends StatelessWidget {
   static const routeName = '/user-products';
+//Since we are not in state class, we dont have context everywhere and we need to pass it
+  Future<void> _refreshProducts(BuildContext context) async {
+    //we dont want to listen for updates here so listen:false to avoid unnecessay widget rebuilds
+    await Provider.of<Products>(context, listen: false).fetchAndSetProducts();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,20 +30,24 @@ class UserProductsScreen extends StatelessWidget {
         ],
       ),
       drawer: AppDrawer(),
-      body: Padding(
-        padding: EdgeInsets.all(8),
-        child: ListView.builder(
-          itemCount: productsData.items.length,
-          itemBuilder: (_, i) => Column(
-                children: [
-                  UserProductItem(
-                    productsData.items[i].id,
-                    productsData.items[i].title,
-                    productsData.items[i].imageUrl,
-                  ),
-                  Divider(),
-                ],
-              ),
+      body: RefreshIndicator(
+        //anonymous function since we need to pass the context to the named function
+        onRefresh: () => _refreshProducts(context),
+        child: Padding(
+          padding: EdgeInsets.all(8),
+          child: ListView.builder(
+            itemCount: productsData.items.length,
+            itemBuilder: (_, i) => Column(
+              children: [
+                UserProductItem(
+                  productsData.items[i].id,
+                  productsData.items[i].title,
+                  productsData.items[i].imageUrl,
+                ),
+                Divider(),
+              ],
+            ),
+          ),
         ),
       ),
     );
