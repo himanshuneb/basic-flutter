@@ -53,17 +53,21 @@ class MyApp extends StatelessWidget {
           //angular backets allow us to provide extra information
           //it allows to set a provider which itself depends upon another provider declared before
           ChangeNotifierProxyProvider<Auth, Products>(
-            create: (ctx) => Products('', []),
+            create: (ctx) => Products('', '', []),
             //keep in mind, previousProducts is null when first initiated
-            update: (ctx, auth, previousProducts) => Products(auth.token,
+            update: (ctx, auth, previousProducts) => Products(
+                auth.token,
+                auth.userId,
                 previousProducts == null ? [] : previousProducts.items),
           ),
           // ChangeNotifierProvider(
           //   create: (ctx) => Products(),
           // ),
           ChangeNotifierProxyProvider<Auth, Orders>(
-            create: (ctx) => Orders('', []),
-            update: (ctx, auth, previousOrders) => Orders(auth.token,
+            create: (ctx) => Orders('', '', []),
+            update: (ctx, auth, previousOrders) => Orders(
+                auth.token,
+                auth.userId,
                 previousOrders == null ? [] : previousOrders.orders),
           ),
           // ChangeNotifierProvider(

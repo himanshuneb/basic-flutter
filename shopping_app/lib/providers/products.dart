@@ -43,8 +43,9 @@ class Products with ChangeNotifier {
   ];
   // var _showFavoritesOnly = false;
   final String authToken;
+  final String userId;
   //Products();
-  Products(this.authToken, this._items);
+  Products(this.authToken, this.userId, this._items);
 
   List<Product> get items {
     // if (_showFavoritesOnly) {
@@ -71,9 +72,12 @@ class Products with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  Future<void> fetchAndSetProducts() async {
-    final url = Uri.parse(
-        'https://shopping-app-6eefa-default-rtdb.asia-southeast1.firebasedatabase.app/products.json?auth=$authToken');
+  Future<void> fetchAndSetProducts([bool filterByUser = false]) async {
+    //now the filter will be only attached to the filter string is the above bool is true
+    final filterString =
+        filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
+    var url = Uri.parse(
+        'https://shopping-app-6eefa-default-rtdb.asia-southeast1.firebasedatabase.app/products.json?auth=$authToken&$filterString');
     try {
       final response = await http.get(url);
       //print(json.decode(response.body));
@@ -81,6 +85,11 @@ class Products with ChangeNotifier {
       if (extractedData == null) {
         return;
       }
+      url = Uri.parse(
+          'https://shopping-app-6eefa-default-rtdb.asia-southeast1.firebasedatabase.app/userFavourites/$userId.json?auth=$authToken');
+      final favouriteResponse = await http.get(url);
+      final favouriteData = json.decode(favouriteResponse.body);
+
       final List<Product> loadedProducts = [];
       //prodId, prodData <=> key, value
       extractedData.forEach((prodId, prodData) {
@@ -89,7 +98,11 @@ class Products with ChangeNotifier {
           title: prodData['title'],
           description: prodData['description'],
           price: prodData['price'],
-          isFavorite: prodData['isFavourite'],
+          //we have favourite data of all products for a given userId
+          //in this data, we have keys which are product ids and the values will be true/false
+          //also there will be a check, if a user has never favourited anything
+          isFavorite:
+              favouriteData == null ? false : favouriteData[prodId] ?? false,
           imageUrl: prodData['imageUrl'],
         ));
       });
@@ -112,7 +125,7 @@ class Products with ChangeNotifier {
           'description': product.description,
           'imageUrl': product.imageUrl,
           'price': product.price,
-          'isFavourite': product.isFavorite,
+          'creatorId': userId,
         }),
       );
       //then
