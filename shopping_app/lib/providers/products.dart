@@ -86,13 +86,28 @@ class Products with ChangeNotifier {
         return;
       }
       url = Uri.parse(
-          'https://shopping-app-6eefa-default-rtdb.asia-southeast1.firebasedatabase.app/userFavourites/$userId.json?auth=$authToken');
+          'https://shopping-app-6eefa-default-rtdb.asia-southeast1.firebasedatabase.app/userFavourites/$userId/products.json?auth=$authToken');
       final favouriteResponse = await http.get(url);
-      final favouriteData = json.decode(favouriteResponse.body);
+      final favouriteData =
+          json.decode(favouriteResponse.body) as Map<String, dynamic>;
+      print('himanshuneb $favouriteData');
 
       final List<Product> loadedProducts = [];
       //prodId, prodData <=> key, value
       extractedData.forEach((prodId, prodData) {
+        var favStatus = false;
+        if (favouriteData != null) {
+          print('himanshuneb test 1');
+          if (favouriteData[prodId] != null) {
+            print('himanshuneb test 2');
+            if (favouriteData[prodId]['isFavourite'] != null) {
+              print('himanshuneb test 3');
+              favStatus = favouriteData[prodId]['isFavourite'];
+            }
+          }
+        }
+        print('himanshuneb $favStatus');
+
         loadedProducts.add(Product(
           id: prodId,
           title: prodData['title'],
@@ -101,8 +116,8 @@ class Products with ChangeNotifier {
           //we have favourite data of all products for a given userId
           //in this data, we have keys which are product ids and the values will be true/false
           //also there will be a check, if a user has never favourited anything
-          isFavorite:
-              favouriteData == null ? false : favouriteData[prodId] ?? false,
+          isFavorite: favStatus,
+          //favouriteData == null ? false : favouriteData[prodId] ?? false,
           imageUrl: prodData['imageUrl'],
         ));
       });

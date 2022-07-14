@@ -33,18 +33,20 @@ class Product with ChangeNotifier {
         'https://shopping-app-6eefa-default-rtdb.asia-southeast1.firebasedatabase.app/userFavourites/$userId/products/$id.json?auth=$token');
     try {
       //changing patch to put
-      // final response = await http.patch(
-      //   url,
-      //   body: json.encode({
-      //     'isFavourite': isFavorite,
-      //   }),
-      // );
-      final response = await http.put(
+      final response = await http.patch(
         url,
         body: json.encode({
-          isFavorite,
+          'isFavourite': isFavorite,
         }),
       );
+      // final response = await http.put(
+      //   url,
+      //   body: json.encode({
+      //     isFavorite,
+      //   }),
+      // );
+      final temp = response.statusCode;
+      print('himanshuneb $temp');
       if (response.statusCode >= 400) {
         _setFavValue(oldStatus);
       }
